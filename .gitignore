@@ -1,0 +1,46 @@
+# =====================
+# Python
+# =====================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env/
+.venv/
+
+# =====================
+# Jupyter (if used later)
+# =====================
+.ipynb_checkpoints/
+
+# =====================
+# IDEs
+# =====================
+.vscode/
+.idea/
+
+# =====================
+# OS files
+# =====================
+.DS_Store
+Thumbs.db
+
+# =====================
+# Logs
+# =====================
+*.log
+
+# =====================
+# Database / local state (if added later)
+# =====================
+*.sqlite
+*.db
+
+# =====================
+# Temporary files
+# =====================
+*.tmp
+*.bak
