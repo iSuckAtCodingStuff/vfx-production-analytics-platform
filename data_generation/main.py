@@ -1,17 +1,31 @@
 import pandas as pd
+from logger import get_logger
 
-# read csv files for next step
-artists_df = pd.read_csv("./data/artists.csv")
-projects_df = pd.read_csv("./data/projects.csv")
-sequence_df = pd.read_csv("./data/sequence.csv")
-shots_df = pd.read_csv("./data/shots.csv")
-tasks_df = pd.read_csv("./data/tasks.csv")
-task_assign_df = pd.read_csv("./data/task_assignment.csv")
-timesheet_df = pd.read_csv("./data/timesheet.csv")
-render_jobs_df = pd.read_csv("./data/render_jobs.csv")
-deliveries_df = pd.read_csv("./data/deliveries.csv")
+# Logger
+logger = get_logger(__name__)
+
+# read csv files along with error handling
+try:
+    logger.info("Loading CSV files...")
+
+    artists_df = pd.read_csv("./data/artists.csv")
+    projects_df = pd.read_csv("./data/projects.csv")
+    sequence_df = pd.read_csv("./data/sequence.csv")
+    shots_df = pd.read_csv("./data/shots.csv")
+    tasks_df = pd.read_csv("./data/tasks.csv")
+    task_assign_df = pd.read_csv("./data/task_assignment.csv")
+    timesheet_df = pd.read_csv("./data/timesheet.csv")
+    render_jobs_df = pd.read_csv("./data/render_jobs.csv")
+    deliveries_df = pd.read_csv("./data/deliveries.csv")
+    logger.info("CSV files loaded successfully.")
+
+except Exception:
+    logger.exception("Failed while loading CSV files.")
+    raise
 
 # DATA VALIDATION
+
+logger.info("Running validation...")
 
 datasets = {
     "Artists": artists_df,
@@ -66,42 +80,4 @@ print(invalid_deliveries)
 
 # Date logic validation for projects as well as sequence data
 
-print((projects_df["start_date"] <= projects_df["end_date"]).all())
 
-sequence_df.merge(projects_df[["project_id", "start_date", "end_date"]], on="project_id")
-
-sequence_project_df = sequence_df.merge(projects_df[["project_id", "start_date", "end_date"]], on="project_id", suffixes=("_sequence", "_project"))
-
-date_cols = [
-    "start_date_sequence",
-    "end_date_sequence",
-    "start_date_project",
-    "end_date_project"
-]
-
-for col in date_cols:
-    sequence_project_df[col] = pd.to_datetime(sequence_project_df[col])
-
-print((sequence_project_df["start_date_project"] <= sequence_project_df["start_date_sequence"]).all())
-
-print((sequence_project_df["end_date_sequence"] <= sequence_project_df["end_date_project"]).all())
-
-print(projects_df.columns.tolist())
-print(sequence_df.columns.tolist())
-print(shots_df.columns.tolist())
-print(tasks_df.columns.tolist())
-print(artists_df.columns.tolist())
-print(task_assign_df.columns.tolist())
-print(timesheet_df.columns.tolist())
-print(render_jobs_df.columns.tolist())
-print(deliveries_df.columns.tolist())
-
-print(projects_df.shape)
-print(sequence_df.shape)
-print(shots_df.shape)
-print(tasks_df.shape)
-print(artists_df.shape)
-print(task_assign_df.shape)
-print(timesheet_df.shape)
-print(render_jobs_df.shape)
-print(deliveries_df.shape)
