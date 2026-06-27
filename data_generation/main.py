@@ -22,12 +22,12 @@ try:
 except Exception:
     logger.exception("Failed while loading CSV files.")
     raise
-<<<<<<< Updated upstream
-=======
+
+
 
 # Log data validation
 logger.info("Running validation...")
->>>>>>> Stashed changes
+
 
 # DATA VALIDATION
 
@@ -87,10 +87,7 @@ print(invalid_deliveries)
 #Log data validation end
 logger.info("Validation completed successfully.")
 
-<<<<<<< Updated upstream
 
-=======
-# ------------------------------------
 # Dataset Summary
 
 logger.info(f"Artists: {artists_df.shape}")
@@ -102,4 +99,4 @@ logger.info(f"Task Assignments: {task_assign_df.shape}")
 
 
 logger.info("Pipeline completed successfully.")
->>>>>>> Stashed changes
+
