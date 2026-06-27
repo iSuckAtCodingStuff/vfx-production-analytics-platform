@@ -22,6 +22,12 @@ try:
 except Exception:
     logger.exception("Failed while loading CSV files.")
     raise
+<<<<<<< Updated upstream
+=======
+
+# Log data validation
+logger.info("Running validation...")
+>>>>>>> Stashed changes
 
 # DATA VALIDATION
 
@@ -78,6 +84,22 @@ invalid_deliveries = (set(deliveries_df["shot_id"])- set(shots_df["shot_id"]))
 
 print(invalid_deliveries)
 
-# Date logic validation for projects as well as sequence data
+#Log data validation end
+logger.info("Validation completed successfully.")
+
+<<<<<<< Updated upstream
+
+=======
+# ------------------------------------
+# Dataset Summary
+
+logger.info(f"Artists: {artists_df.shape}")
+logger.info(f"Projects: {projects_df.shape}")
+logger.info(f"Sequences: {sequence_df.shape}")
+logger.info(f"Shots: {shots_df.shape}")
+logger.info(f"Tasks: {tasks_df.shape}")
+logger.info(f"Task Assignments: {task_assign_df.shape}")
 
 
+logger.info("Pipeline completed successfully.")
+>>>>>>> Stashed changes
