@@ -14,7 +14,6 @@ data_generation/        → Data generation scripts (ETL source layer)
 generate.py             → ETL pipeline orchestrator (runs full data generation)  
 data/                   → Output datasets (raw and processed)  
 main.py                 → Data loading and validation entry point  
-validation/             → Data quality and integrity checks  
 
 ## 📊 Data Model
 
