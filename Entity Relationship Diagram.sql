@@ -1,107 +1,93 @@
 CREATE TABLE "dim_project" (
-  "project_id" int PRIMARY KEY,
-  "project_name" varchar,
-  "project_type" varchar,
-  "client" varchar,
-  "budget_million_usd" float,
-  "complexity" varchar,
-  "start_date" date,
+  "project_id" varchar(15) PRIMARY KEY NOT NULL,
+  "project_name" varchar(100) NOT NULL,
+  "project_type" varchar(30) NOT NULL,
+  "client" varchar(100) NOT NULL,
+  "budget_million_usd" numeric(10,2) NOT NULL,
+  "complexity" varchar(20) NOT NULL,
+  "start_date" date NOT NULL,
   "end_date" date,
-  "status" varchar
+  "status" varchar(20) NOT NULL
 );
 
 CREATE TABLE "dim_sequence" (
-  "sequence_id" int PRIMARY KEY,
-  "project_id" int,
-  "sequence_name" varchar,
-  "complexity" varchar,
-  "start_date" date,
+  "sequence_id" varchar(20) PRIMARY KEY NOT NULL,
+  "project_id" varchar(15) NOT NULL,
+  "sequence_name" varchar(100) NOT NULL,
+  "complexity" varchar(20) NOT NULL,
+  "start_date" date NOT NULL,
   "end_date" date,
-  "status" varchar
+  "status" varchar(20) NOT NULL
 );
 
 CREATE TABLE "dim_shot" (
-  "shot_id" int PRIMARY KEY,
-  "project_id" int,
-  "sequence_id" int,
-  "shot_name" varchar,
-  "complexity" varchar,
-  "frame_count" int,
-  "start_date" date,
+  "shot_id" varchar(20) PRIMARY KEY NOT NULL,
+  "sequence_id" varchar(20) NOT NULL,
+  "shot_name" varchar(100) NOT NULL,
+  "complexity" varchar(20) NOT NULL,
+  "frame_count" int NOT NULL,
+  "start_date" date NOT NULL,
   "end_date" date,
-  "status" varchar
+  "status" varchar(20) NOT NULL
 );
 
 CREATE TABLE "dim_task" (
-  "task_id" int PRIMARY KEY,
-  "project_id" int,
-  "sequence_id" int,
-  "shot_id" int,
-  "department" varchar,
-  "estimated_hours" float,
-  "priority" varchar,
-  "start_date" date,
+  "task_id" varchar(20) PRIMARY KEY NOT NULL,
+  "shot_id" varchar(20) NOT NULL,
+  "department" varchar(50) NOT NULL,
+  "estimated_hours" numeric(10,2) NOT NULL,
+  "priority" varchar(20) NOT NULL,
+  "start_date" date NOT NULL,
   "end_date" date,
-  "status" varchar
+  "status" varchar(20) NOT NULL
 );
 
 CREATE TABLE "dim_artist" (
-  "artist_id" int PRIMARY KEY,
-  "artist_name" varchar,
-  "department" varchar,
-  "experience_years" float
+  "artist_id" varchar(15) PRIMARY KEY NOT NULL,
+  "artist_name" varchar(100) NOT NULL,
+  "department" varchar(50) NOT NULL,
+  "experience_years" numeric(4,1) NOT NULL
 );
 
 CREATE TABLE "fact_task_assignment" (
-  "assignment_id" int PRIMARY KEY,
-  "task_id" int,
-  "artist_id" int,
-  "assigned_hours" float,
-  "assignment_date" date
+  "assignment_id" varchar(20) PRIMARY KEY NOT NULL,
+  "task_id" varchar(20) NOT NULL,
+  "artist_id" varchar(15) NOT NULL,
+  "assigned_hours" numeric(10,2) NOT NULL,
+  "assignment_date" date NOT NULL
 );
 
 CREATE TABLE "fact_timesheet" (
-  "timesheet_id" int PRIMARY KEY,
-  "assignment_id" int,
-  "artist_id" int,
-  "work_date" date,
-  "hours_logged" float
+  "timesheet_id" varchar(20) PRIMARY KEY NOT NULL,
+  "assignment_id" varchar(20) NOT NULL,
+  "work_date" date NOT NULL,
+  "hours_logged" numeric(10,2) NOT NULL
 );
 
 CREATE TABLE "fact_render_job" (
-  "render_id" int PRIMARY KEY,
-  "project_id" int,
-  "sequence_id" int,
-  "shot_id" int,
-  "frame_count" int,
-  "render_engine" varchar,
-  "render_status" varchar,
-  "render_hours" float,
-  "submission_date" date,
+  "render_id" varchar(20) PRIMARY KEY NOT NULL,
+  "shot_id" varchar(20) NOT NULL,
+  "frame_count" int NOT NULL,
+  "render_engine" varchar(50) NOT NULL,
+  "render_status" varchar(20) NOT NULL,
+  "render_hours" numeric(10,2) NOT NULL,
+  "submission_date" date NOT NULL,
   "completion_date" date
 );
 
 CREATE TABLE "fact_delivery" (
-  "delivery_id" int PRIMARY KEY,
-  "project_id" int,
-  "sequence_id" int,
-  "shot_id" int,
-  "version" int,
-  "delivery_date" date,
-  "client_status" varchar,
-  "review_days" float,
-  "final_delivery" boolean
+  "delivery_id" varchar(20) PRIMARY KEY NOT NULL,
+  "shot_id" varchar(20) NOT NULL,
+  "version" int NOT NULL,
+  "delivery_date" date NOT NULL,
+  "client_status" varchar(30) NOT NULL,
+  "review_days" numeric(10,2),
+  "final_delivery" boolean NOT NULL
 );
 
 ALTER TABLE "dim_sequence" ADD FOREIGN KEY ("project_id") REFERENCES "dim_project" ("project_id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "dim_shot" ADD FOREIGN KEY ("project_id") REFERENCES "dim_project" ("project_id") DEFERRABLE INITIALLY IMMEDIATE;
-
 ALTER TABLE "dim_shot" ADD FOREIGN KEY ("sequence_id") REFERENCES "dim_sequence" ("sequence_id") DEFERRABLE INITIALLY IMMEDIATE;
-
-ALTER TABLE "dim_task" ADD FOREIGN KEY ("project_id") REFERENCES "dim_project" ("project_id") DEFERRABLE INITIALLY IMMEDIATE;
-
-ALTER TABLE "dim_task" ADD FOREIGN KEY ("sequence_id") REFERENCES "dim_sequence" ("sequence_id") DEFERRABLE INITIALLY IMMEDIATE;
 
 ALTER TABLE "dim_task" ADD FOREIGN KEY ("shot_id") REFERENCES "dim_shot" ("shot_id") DEFERRABLE INITIALLY IMMEDIATE;
 
@@ -111,16 +97,6 @@ ALTER TABLE "fact_task_assignment" ADD FOREIGN KEY ("artist_id") REFERENCES "dim
 
 ALTER TABLE "fact_timesheet" ADD FOREIGN KEY ("assignment_id") REFERENCES "fact_task_assignment" ("assignment_id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "fact_timesheet" ADD FOREIGN KEY ("artist_id") REFERENCES "dim_artist" ("artist_id") DEFERRABLE INITIALLY IMMEDIATE;
-
-ALTER TABLE "fact_render_job" ADD FOREIGN KEY ("project_id") REFERENCES "dim_project" ("project_id") DEFERRABLE INITIALLY IMMEDIATE;
-
-ALTER TABLE "fact_render_job" ADD FOREIGN KEY ("sequence_id") REFERENCES "dim_sequence" ("sequence_id") DEFERRABLE INITIALLY IMMEDIATE;
-
 ALTER TABLE "fact_render_job" ADD FOREIGN KEY ("shot_id") REFERENCES "dim_shot" ("shot_id") DEFERRABLE INITIALLY IMMEDIATE;
-
-ALTER TABLE "fact_delivery" ADD FOREIGN KEY ("project_id") REFERENCES "dim_project" ("project_id") DEFERRABLE INITIALLY IMMEDIATE;
-
-ALTER TABLE "fact_delivery" ADD FOREIGN KEY ("sequence_id") REFERENCES "dim_sequence" ("sequence_id") DEFERRABLE INITIALLY IMMEDIATE;
 
 ALTER TABLE "fact_delivery" ADD FOREIGN KEY ("shot_id") REFERENCES "dim_shot" ("shot_id") DEFERRABLE INITIALLY IMMEDIATE;
