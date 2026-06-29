@@ -6,7 +6,7 @@ The VFX Production Analytics Platform is a simulated end-to-end data engineering
 
 It generates structured production data such as artists, projects, sequences, shots, tasks, and assignments, and enforces realistic relationships between them. The project also includes data validation checks to ensure consistency and integrity across all datasets.
 
-This project demonstrates core Data Engineering skills including ETL pipeline design, relational data modeling, data validation, and analytics-ready dataset creation.
+The project demonstrates an end-to-end data engineering workflow, including synthetic data generation, data validation, ETL into a PostgreSQL data warehouse, SQL-based analytics, and interactive visualizations built with Plotly.
 
 ## 🏗️ Project Structure
 
@@ -71,6 +71,9 @@ data/raw/
 - shots.csv
 - tasks.csv
 - task_assignments.csv
+- timesheets.csv
+- render_jobs.csv
+- deliveries.csv
 
 ## 🛠️ Tech Stack
 
@@ -91,11 +94,14 @@ This project demonstrates:
 
 ## 🚀 Future Enhancements
 
-- PostgreSQL data warehouse integration  
-- Star schema (fact & dimension modeling)  
-- SQL analytics layer (KPI queries)  
-- Power BI / Tableau dashboards  
-- Logging and pipeline monitoring system  
+- PostgreSQL implementation with normalized Snowflake schema 
+- Automated ETL pipeline for loading raw CSV data into the warehouse  
+- Advanced SQL analytics layer with reusable KPI views  
+- Interactive analytics dashboard using Plotly  
+- Data quality reporting and validation summaries
+- Logging, monitoring, and error handling for the ETL pipeline  
+- Docker support for reproducible deployment
+- Unit and integration tests for ETL and validation modules
 
 ## 👨‍💻 Author
 
