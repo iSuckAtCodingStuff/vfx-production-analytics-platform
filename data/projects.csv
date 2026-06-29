@@ -1,11 +1,11 @@
 project_id,project_name,project_type,client,budget_million_usd,complexity,start_date,end_date,status
-P001,Dragon Rider,Feature Film,Compass Media,248,High,2025-09-08,2027-11-12,In Progress
-P002,Bear in City,Streaming Series,Quantum Entertainment,230,High,2023-07-28,2024-08-12,Completed
-P003,Imaginary Bonds,Streaming Series,Para-Mountain Entertainment,72,Medium,2025-06-26,2026-05-24,Completed
-P004,Galactic Guardians,Streaming Series,Trixify Media House,47,Low,2024-09-11,2025-07-22,Completed
-P005,Sheep Quest,Feature Film,Positive Studios,31,Medium,2024-11-24,2026-12-11,In Progress
-P006,Frozen History,Streaming Series,Miller-Jones Entertainment,69,Low,2024-03-29,2025-04-15,Completed
-P007,Teddy Bear,Feature Film,Smith Media,48,Medium,2026-06-19,2028-09-21,In Progress
-P008,Titan Rising,Feature Film,Apex Studios,211,High,2026-03-09,2027-05-08,In Progress
-P009,Mystic Forest,Feature Film,Blue Potato Entertainment,58,Low,2024-11-08,2026-12-03,In Progress
-P010,Solar Frontier,Streaming Series,Story Store Studios,211,High,2024-07-05,2024-12-12,Completed
+P001,Dragon Rider,Feature Film,Compass Media,248,High,2025-09-13,2027-11-17,In Progress
+P002,Bear in City,Streaming Series,Quantum Entertainment,230,High,2023-08-02,2024-08-17,Completed
+P003,Imaginary Bonds,Streaming Series,Para-Mountain Entertainment,72,Medium,2025-07-01,2026-05-29,Completed
+P004,Galactic Guardians,Streaming Series,Trixify Media House,47,Low,2024-09-16,2025-07-27,Completed
+P005,Sheep Quest,Feature Film,Positive Studios,31,Medium,2024-11-29,2026-12-16,In Progress
+P006,Frozen History,Streaming Series,Miller-Jones Entertainment,69,Low,2024-04-03,2025-04-20,Completed
+P007,Teddy Bear,Feature Film,Smith Media,48,Medium,2026-06-24,2028-09-26,In Progress
+P008,Titan Rising,Feature Film,Apex Studios,211,High,2026-03-14,2027-05-13,In Progress
+P009,Mystic Forest,Feature Film,Blue Potato Entertainment,58,Low,2024-11-13,2026-12-08,In Progress
+P010,Solar Frontier,Streaming Series,Story Store Studios,211,High,2024-07-10,2024-12-17,Completed

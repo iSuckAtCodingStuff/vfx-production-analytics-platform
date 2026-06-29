@@ -45,58 +45,67 @@ datasets = {
     "Deliveries": deliveries_df
 }
 
-for name, df in datasets.items():
-    print(f"{name}: {df.shape}")
+# for name, df in datasets.items():
+#     print(f"{name}: {df.shape}")
 
-for name, df in datasets.items():
-    print(f"\n{name}")
-    print(df.isnull().sum())
+# for name, df in datasets.items():
+#     print(f"\n{name}")
+#     print(df.isnull().sum())
 
-print(artists_df["artist_id"].duplicated().sum())
+# print(artists_df["artist_id"].duplicated().sum())
 
-print(projects_df["project_id"].duplicated().sum())
+# print(projects_df["project_id"].duplicated().sum())
 
-print(sequence_df["sequence_id"].duplicated().sum())
+# print(sequence_df["sequence_id"].duplicated().sum())
 
-print(shots_df["shot_id"].duplicated().sum())
+# print(shots_df["shot_id"].duplicated().sum())
 
-invalid_sequences = (set(sequence_df["project_id"])- set(projects_df["project_id"]))
+# invalid_sequences = (set(sequence_df["project_id"])- set(projects_df["project_id"]))
 
-print(invalid_sequences)
+# print(invalid_sequences)
 
-invalid_shots = (set(shots_df["sequence_id"])- set(sequence_df["sequence_id"]))
+# invalid_shots = (set(shots_df["sequence_id"])- set(sequence_df["sequence_id"]))
 
-print(invalid_shots)
+# print(invalid_shots)
 
-invalid_tasks = (set(tasks_df["shot_id"])- set(shots_df["shot_id"]))
+# invalid_tasks = (set(tasks_df["shot_id"])- set(shots_df["shot_id"]))
 
-print(invalid_tasks)
+# print(invalid_tasks)
 
-invalid_artists = (set(task_assign_df["artist_id"])- set(artists_df["artist_id"]))
+# invalid_artists = (set(task_assign_df["artist_id"])- set(artists_df["artist_id"]))
 
-print(invalid_artists)
+# print(invalid_artists)
 
-invalid_timesheets = (set(timesheet_df["assignment_id"])- set(task_assign_df["assignment_id"]))
+# invalid_timesheets = (set(timesheet_df["assignment_id"])- set(task_assign_df["assignment_id"]))
 
-print(invalid_timesheets)
+# print(invalid_timesheets)
 
-invalid_deliveries = (set(deliveries_df["shot_id"])- set(shots_df["shot_id"]))
+# invalid_deliveries = (set(deliveries_df["shot_id"])- set(shots_df["shot_id"]))
 
-print(invalid_deliveries)
+# print(invalid_deliveries)
 
-#Log data validation end
-logger.info("Validation completed successfully.")
-
-
-# Dataset Summary
-
-logger.info(f"Artists: {artists_df.shape}")
-logger.info(f"Projects: {projects_df.shape}")
-logger.info(f"Sequences: {sequence_df.shape}")
-logger.info(f"Shots: {shots_df.shape}")
-logger.info(f"Tasks: {tasks_df.shape}")
-logger.info(f"Task Assignments: {task_assign_df.shape}")
+# #Log data validation end
+# logger.info("Validation completed successfully.")
 
 
-logger.info("Pipeline completed successfully.")
+# # Dataset Summary
 
+# logger.info(f"Artists: {artists_df.shape}")
+# logger.info(f"Projects: {projects_df.shape}")
+# logger.info(f"Sequences: {sequence_df.shape}")
+# logger.info(f"Shots: {shots_df.shape}")
+# logger.info(f"Tasks: {tasks_df.shape}")
+# logger.info(f"Task Assignments: {task_assign_df.shape}")
+
+
+# logger.info("Pipeline completed successfully.")
+
+print(projects_df.head(1))
+print(artists_df.head(1))
+print(sequence_df.head(1))
+print(shots_df.head(1))
+print(tasks_df.head(1))
+print(task_assign_df.head(1))
+print(timesheet_df.head(1))
+print(render_jobs_df.head(1))
+print(deliveries_df.head(1))
