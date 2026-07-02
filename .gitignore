@@ -1,4 +1,10 @@
+# =====================
+# Environment Variables
+.env
+
+# =====================
 # Logs
+# =====================
 logs/
 *.log
 
@@ -10,7 +16,9 @@ __pycache__/
 *.pyo
 *.pyd
 
+# =====================
 # Virtual environment
+# =====================
 venv/
 .env/
 .venv/
