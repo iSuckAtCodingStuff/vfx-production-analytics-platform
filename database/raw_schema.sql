@@ -139,6 +139,8 @@ CREATE TABLE IF NOT EXISTS raw.render_jobs (
 
 CREATE TABLE IF NOT EXISTS raw.deliveries (
     delivery_id        TEXT,
+    project_id         TEXT,
+    sequence_id        TEXT,
     shot_id            TEXT,
     version            TEXT,
     delivery_date      TEXT,

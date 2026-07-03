@@ -24,13 +24,15 @@ def get_logger(name: str = "vfx_pipeline") -> logging.Logger:
     -------
     logging.Logger"""
 
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger(name)
 
     # Prevent duplicate handlers
     if logger.handlers:
         return logger
 
     logger.setLevel(logging.INFO)
+
+    logger.propagate = False
 
     formatter = logging.Formatter("%(asctime)s | %(levelname)-8s | %(name)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S",)
 
