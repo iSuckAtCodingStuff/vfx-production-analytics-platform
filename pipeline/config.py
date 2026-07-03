@@ -23,5 +23,3 @@ WAREHOUSE_SCHEMA = "warehouse"
 
 LOG_DIR = BASE_DIR / "logs"
 DATA_DIR = BASE_DIR / "data"
-
-print(DB_CONFIG)

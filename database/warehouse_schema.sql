@@ -135,6 +135,8 @@ CREATE TABLE IF NOT EXISTS warehouse.fact_render_job (
 
 CREATE TABLE IF NOT EXISTS warehouse.fact_delivery (
     delivery_id           VARCHAR(20) PRIMARY KEY,
+    project_id            VARCHAR(10),
+    sequence_id           VARCHAR(10) NOT NULL,
     shot_id               VARCHAR(20) NOT NULL,
     version               INTEGER NOT NULL,
     delivery_date         DATE NOT NULL,
