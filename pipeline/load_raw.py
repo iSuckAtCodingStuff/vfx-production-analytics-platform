@@ -104,18 +104,8 @@ def load_table(csv_path: Path, schema: str) -> int:
         logger.exception(f"CSV file is empty: {csv_path}")
         raise
 
-    # except SQLAlchemyError:
-    #     logger.error(f"Database error while loading {schema}.{table_name}")
-    #     raise
-
-    except SQLAlchemyError as e:
-        print("\n========== DATABASE ERROR ==========")
-        print(type(e).__name__)
-
-        if hasattr(e, "orig"):
-            print("\nPostgreSQL says:")
-            print(e.orig)
-
+    except SQLAlchemyError:
+        logger.error(f"Database error while loading {schema}.{table_name}")
         raise
 
     except Exception:
@@ -136,7 +126,7 @@ def main() -> None:
     failure_count = 0
     total_rows = 0
     
-    failed_files = []
+    failed_files = {}
 
     csv_files = sorted(DATA_DIR.glob("*.csv"))
 
@@ -151,14 +141,13 @@ def main() -> None:
             success_count += 1
             total_rows += rows
 
-        # except Exception as e:
-        #     failure_count += 1
-        #     failed_files.append(csv_file.name)
-            
-        #     logger.error(f"Failed to load {csv_file.name}: " f"{type(e).__name__}")
+        except Exception as e:
+            failure_count += 1
+            failed_files[csv_file.name] = type(e).__name__
 
-        except Exception:
-            raise
+            logger.error(f"Failed to load {csv_file.name}: " f"{type(e).__name__}")
+            continue
+
 
     elapsed = time.perf_counter() - start_time
 
@@ -174,8 +163,9 @@ def main() -> None:
 
     if failed_files:
         logger.info("Failed files:")
-        for file in failed_files:
-            logger.info(f" - {file}")
+
+        for file_name, error in failed_files.items():
+            logger.info(f" - {file_name}: {error}")
      
     logger.info("=" * 50)
 
