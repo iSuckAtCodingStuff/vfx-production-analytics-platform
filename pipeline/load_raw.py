@@ -87,7 +87,8 @@ def load_table(csv_path: Path, schema: str) -> int:
             schema=schema,
             if_exists="append",
             index=False,
-            #method="multi"
+            method="multi",
+            chunksize=1000
         )
 
         row_count = len(df)
