@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS raw.sequences (
 
 CREATE TABLE IF NOT EXISTS raw.shots (
     shot_id            TEXT,
+    project_id         TEXT,
     sequence_id        TEXT,
     shot_name          TEXT,
     complexity         TEXT,
@@ -82,6 +83,8 @@ CREATE TABLE IF NOT EXISTS raw.shots (
 
 CREATE TABLE IF NOT EXISTS raw.tasks (
     task_id            TEXT,
+    project_id         TEXT,
+    sequence_id        TEXT,
     shot_id            TEXT,
     department         TEXT,
     estimated_hours    TEXT,
@@ -112,6 +115,7 @@ CREATE TABLE IF NOT EXISTS raw.task_assignments (
 CREATE TABLE IF NOT EXISTS raw.timesheets (
     timesheet_id       TEXT,
     assignment_id      TEXT,
+    artist_id          TEXT,
     work_date          TEXT,
     hours_logged       TEXT,
     _loaded_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -123,6 +127,8 @@ CREATE TABLE IF NOT EXISTS raw.timesheets (
 
 CREATE TABLE IF NOT EXISTS raw.render_jobs (
     render_id          TEXT,
+	project_id         TEXT,
+    sequence_id        TEXT,
     shot_id            TEXT,
     frame_count        TEXT,
     render_engine      TEXT,
