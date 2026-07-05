@@ -121,6 +121,8 @@ CREATE TABLE IF NOT EXISTS staging.timesheets (
 
 CREATE TABLE IF NOT EXISTS staging.render_jobs (
     render_id           VARCHAR(20) NOT NULL,
+	project_id          VARCHAR(10) NOT NULL,
+    sequence_id         VARCHAR(10) NOT NULL,
     shot_id             VARCHAR(20) NOT NULL,
     frame_count         INTEGER NOT NULL CHECK (frame_count > 0),
     render_engine       VARCHAR(50) NOT NULL,
