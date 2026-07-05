@@ -18,7 +18,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from pipeline.config import DB_CONFIG
 from pipeline.db import get_engine
-from pipeline.logger import get_logger
+from pipeline.logger import get_logger, log_invalid_rows
 
 
 # ============================================================================
