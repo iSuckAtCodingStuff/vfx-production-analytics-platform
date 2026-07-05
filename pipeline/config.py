@@ -23,3 +23,7 @@ WAREHOUSE_SCHEMA = "warehouse"
 
 LOG_DIR = BASE_DIR / "logs"
 DATA_DIR = BASE_DIR / "data"
+
+INVALID_LOG_DIR = LOG_DIR / "invalid_rows"
+
+INVALID_LOG_DIR.mkdir(parents=True, exist_ok=True, )
