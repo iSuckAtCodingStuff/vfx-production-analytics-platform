@@ -33,9 +33,6 @@ CREATE TABLE IF NOT EXISTS projects
     CONSTRAINT chk_projects_id
         CHECK (project_id ~ '^P[0-9]+$'),
 
-    CONSTRAINT chk_projects_total_shots
-        CHECK (total_shots >= 0),
-
     CONSTRAINT chk_projects_dates
         CHECK (end_date >= start_date)
 );
