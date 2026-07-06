@@ -363,3 +363,18 @@ COMMENT ON COLUMN deliveries.version IS
 
 COMMENT ON COLUMN deliveries.final_delivery IS
 'Indicates whether this delivery is the final approved version.';
+
+
+-- =====================================================
+-- Invalid Row Log
+-- Stores rows rejected during Raw -> Staging ETL
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS invalid_log
+(
+    log_id              BIGSERIAL PRIMARY KEY,
+    source_table        VARCHAR(50) NOT NULL,
+    error_reason        TEXT NOT NULL,
+    row_data            JSONB NOT NULL,
+    logged_at           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
