@@ -98,3 +98,13 @@ ON warehouse.dim_project(status);
 
 CREATE INDEX IF NOT EXISTS idx_project_type
 ON warehouse.dim_project(project_type);
+
+-- ============================================================
+-- Invalid Rows
+-- ============================================================
+
+CREATE INDEX idx_invalid_log_source_table
+ON invalid_log(source_table);
+
+CREATE INDEX idx_invalid_log_logged_at
+ON invalid_log(logged_at);

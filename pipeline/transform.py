@@ -8,7 +8,7 @@ Purpose:
     data before loading it into the staging schema
 ===========================================================
 """
-
+import json
 import pandas as pd
 from sqlalchemy import text
 
@@ -18,6 +18,8 @@ from pipeline.db import get_engine, dispose_engine
 logger = get_logger(__name__)
 
 engine = get_engine()
+
+INVALID_ROW_COUNT = 0
 
 # ==========================================================
 # Staging Column Definitions
@@ -142,10 +144,38 @@ ID_PATTERNS = {
 def log_invalid_rows(table_name: str, invalid_df: pd.DataFrame, reason: str,) -> None:
     """ Log invalid rows removed during transformation """
 
+    global INVALID_ROW_COUNT
+
+    INVALID_ROW_COUNT += len(invalid_df)
+
     if invalid_df.empty:
         return
 
     logger.warning("%s: Removed %d invalid row(s). Reason: %s", table_name, len(invalid_df), reason,)
+
+    if invalid_df.empty:
+        return
+    
+    records = invalid_df.to_dict(orient="records")
+
+    for record in records:
+        for key, value in record.items():
+            if pd.isna(value):
+                record[key] = None
+
+    invalid_log = pd.DataFrame(
+        {
+            "source_table": [table_name] * len(records),
+            "error_reason": [reason] * len(records),
+            "row_data": [json.dumps(record, default=str) for record in records],
+        }
+    )
+
+    try:
+        invalid_log.to_sql(name="invalid_log", schema="staging", con=engine,if_exists="append", index=False,)
+    
+    except Exception:
+        logger.exception("Failed to write rejected rows to staging.invalid_log")
 
     logger.debug("%s\n%s", reason, invalid_df.to_string(index=False),)
 
@@ -158,9 +188,9 @@ def _apply_validation(df: pd.DataFrame, mask: pd.Series, table_name: str, reason
     """ Apply a validation mask, log rejected rows, and return only valid rows """
 
     invalid_rows = df.loc[~mask]
-
-    log_invalid_rows(table_name, invalid_rows, reason,)
-
+    if not invalid_rows.empty:
+        log_invalid_rows(table_name, invalid_rows, reason,)
+    
     return df.loc[mask].copy()
 
 
@@ -612,15 +642,13 @@ def main() -> None:
     try:
         
         for table_name in TRANSFORMATIONS:
-            process_table(table_name)
-            successful += 1
+            try:
+                process_table(table_name)
+                successful += 1
 
-    except Exception as e:
-        failed += 1
-
-        logger.exception("%s: ETL failed.", table_name,)
-
-        raise
+            except Exception as e:
+                failed += 1
+                logger.exception("%s: ETL failed.", table_name,)
         
     finally:
         dispose_engine()
@@ -629,6 +657,7 @@ def main() -> None:
     logger.info("Raw -> Staging ETL Complete")
     logger.info("Successful tables : %d", successful)
     logger.info("Failed tables     : %d", failed)
+    logger.info("Invalid row(s)    : %d", INVALID_ROW_COUNT,)
     logger.info("=" * 60)
 
 
