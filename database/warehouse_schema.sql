@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS warehouse.fact_delivery (
     project_id            VARCHAR(10) NOT NULL,
     sequence_id           VARCHAR(10) NOT NULL,
     shot_id               VARCHAR(20) NOT NULL,
-    version               INTEGER NOT NULL,
+    version               VARCHAR(10) NOT NULL,
     delivery_date         DATE NOT NULL,
     client_status         VARCHAR(30) NOT NULL,
     review_days           NUMERIC(10,2),
