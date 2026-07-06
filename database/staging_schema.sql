@@ -43,10 +43,6 @@ COMMENT ON TABLE projects IS
 COMMENT ON COLUMN projects.project_id IS
 'Business identifier for the project.';
 
-COMMENT ON COLUMN projects.total_shots IS
-'Expected number of shots in the project.';
-
-
 -----------------------------------------------------------
 -- SEQUENCES
 -----------------------------------------------------------
