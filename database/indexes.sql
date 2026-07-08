@@ -1,100 +1,135 @@
--- ============================================================
--- Warehouse Indexes
---
--- Purpose: Improve query performance for joins and analytics.
--- ============================================================
+/*
+===============================================================================
+Warehouse Indexes
 
--- ============================================================
--- Dimension Hierarchy
--- ============================================================
+Purpose: Improve query performance for joins, filtering and analytics.
+===============================================================================
+*/
 
-CREATE INDEX IF NOT EXISTS idx_dim_sequence_project
-ON warehouse.dim_sequence(project_id);
+-- ============================================================================
+-- DIMENSION TABLE INDEXES
+-- ============================================================================
 
-CREATE INDEX IF NOT EXISTS idx_dim_shot_sequence
-ON warehouse.dim_shot(sequence_id);
+-- Foreign Key Indexes
 
--- ============================================================
--- Task Fact Table
--- ============================================================
+CREATE INDEX IF NOT EXISTS idx_dim_sequence_project_key
+ON warehouse.dim_sequence (project_key);
 
-CREATE INDEX IF NOT EXISTS idx_fact_task_shot
-ON warehouse.fact_task(shot_id);
+CREATE INDEX IF NOT EXISTS idx_dim_shot_sequence_key
+ON warehouse.dim_shot (sequence_key);
 
-CREATE INDEX IF NOT EXISTS idx_fact_task_department
-ON warehouse.fact_task(department);
+CREATE INDEX IF NOT EXISTS idx_dim_task_shot_key
+ON warehouse.dim_task (shot_key);
 
-CREATE INDEX IF NOT EXISTS idx_fact_task_status
-ON warehouse.fact_task(status);
 
-CREATE INDEX IF NOT EXISTS idx_fact_task_priority
-ON warehouse.fact_task(priority);
+-- Frequently Filtered Dimension Columns
 
--- ============================================================
--- Task Assignment
--- ============================================================
+CREATE INDEX IF NOT EXISTS idx_dim_project_status
+ON warehouse.dim_project (status);
 
-CREATE INDEX IF NOT EXISTS idx_assignment_task
-ON warehouse.fact_task_assignment(task_id);
+CREATE INDEX IF NOT EXISTS idx_dim_project_client
+ON warehouse.dim_project (client);
 
-CREATE INDEX IF NOT EXISTS idx_assignment_artist
-ON warehouse.fact_task_assignment(artist_id);
+CREATE INDEX IF NOT EXISTS idx_dim_project_type
+ON warehouse.dim_project (project_type);
 
-CREATE INDEX IF NOT EXISTS idx_assignment_date
-ON warehouse.fact_task_assignment(assignment_date);
+CREATE INDEX IF NOT EXISTS idx_dim_sequence_status
+ON warehouse.dim_sequence (status);
 
--- ============================================================
--- Timesheets
--- ============================================================
+CREATE INDEX IF NOT EXISTS idx_dim_shot_status
+ON warehouse.dim_shot (status);
 
-CREATE INDEX IF NOT EXISTS idx_timesheet_assignment
-ON warehouse.fact_timesheet(assignment_id);
+CREATE INDEX IF NOT EXISTS idx_dim_task_department
+ON warehouse.dim_task (department);
 
-CREATE INDEX IF NOT EXISTS idx_timesheet_work_date
-ON warehouse.fact_timesheet(work_date);
+CREATE INDEX IF NOT EXISTS idx_dim_task_status
+ON warehouse.dim_task (status);
 
--- ============================================================
--- Render Jobs
--- ============================================================
+CREATE INDEX IF NOT EXISTS idx_dim_task_priority
+ON warehouse.dim_task (priority);
 
-CREATE INDEX IF NOT EXISTS idx_render_shot
-ON warehouse.fact_render_job(shot_id);
+CREATE INDEX IF NOT EXISTS idx_dim_artist_department
+ON warehouse.dim_artist (department);
 
-CREATE INDEX IF NOT EXISTS idx_render_status
-ON warehouse.fact_render_job(render_status);
 
-CREATE INDEX IF NOT EXISTS idx_render_engine
-ON warehouse.fact_render_job(render_engine);
+-- ============================================================================
+-- FACT TABLE INDEXES
+-- ============================================================================
 
--- ============================================================
--- Deliveries
--- ============================================================
+-- --------------------------------------------------------------------------
+-- fact_task_assignment
+-- --------------------------------------------------------------------------
 
-CREATE INDEX IF NOT EXISTS idx_delivery_shot
-ON warehouse.fact_delivery(shot_id);
+CREATE INDEX IF NOT EXISTS idx_fact_assignment_task_key
+ON warehouse.fact_task_assignment (task_key);
 
-CREATE INDEX IF NOT EXISTS idx_delivery_client_status
-ON warehouse.fact_delivery(client_status);
+CREATE INDEX IF NOT EXISTS idx_fact_assignment_artist_key
+ON warehouse.fact_task_assignment (artist_key);
 
-CREATE INDEX IF NOT EXISTS idx_delivery_date
-ON warehouse.fact_delivery(delivery_date);
+CREATE INDEX IF NOT EXISTS idx_fact_assignment_date
+ON warehouse.fact_task_assignment (assignment_date);
 
--- ============================================================
--- Artists
--- ============================================================
 
-CREATE INDEX IF NOT EXISTS idx_artist_department
-ON warehouse.dim_artist(department);
+-- --------------------------------------------------------------------------
+-- fact_timesheet
+-- --------------------------------------------------------------------------
 
--- ============================================================
--- Projects
--- ============================================================
+CREATE INDEX IF NOT EXISTS idx_fact_timesheet_assignment_key
+ON warehouse.fact_timesheet (assignment_key);
 
-CREATE INDEX IF NOT EXISTS idx_project_client
-ON warehouse.dim_project(client);
+CREATE INDEX IF NOT EXISTS idx_fact_timesheet_work_date
+ON warehouse.fact_timesheet (work_date);
 
-CREATE INDEX IF NOT EXISTS idx_project_status
-ON warehouse.dim_project(status);
 
-CREATE INDEX IF NOT EXISTS idx_project_type
-ON warehouse.dim_project(project_type);
+-- --------------------------------------------------------------------------
+-- fact_render
+-- --------------------------------------------------------------------------
+
+CREATE INDEX IF NOT EXISTS idx_fact_render_shot_key
+ON warehouse.fact_render (shot_key);
+
+CREATE INDEX IF NOT EXISTS idx_fact_render_submission_date
+ON warehouse.fact_render (submission_date);
+
+CREATE INDEX IF NOT EXISTS idx_fact_render_completion_date
+ON warehouse.fact_render (completion_date);
+
+CREATE INDEX IF NOT EXISTS idx_fact_render_status
+ON warehouse.fact_render (render_status);
+
+CREATE INDEX IF NOT EXISTS idx_fact_render_engine
+ON warehouse.fact_render (render_engine);
+
+
+-- --------------------------------------------------------------------------
+-- fact_delivery
+-- --------------------------------------------------------------------------
+
+CREATE INDEX IF NOT EXISTS idx_fact_delivery_shot_key
+ON warehouse.fact_delivery (shot_key);
+
+CREATE INDEX IF NOT EXISTS idx_fact_delivery_delivery_date
+ON warehouse.fact_delivery (delivery_date);
+
+CREATE INDEX IF NOT EXISTS idx_fact_delivery_client_status
+ON warehouse.fact_delivery (client_status);
+
+CREATE INDEX IF NOT EXISTS idx_fact_delivery_final_delivery
+ON warehouse.fact_delivery (final_delivery);
+
+
+-- ============================================================================
+-- DATE DIMENSION INDEXES
+-- ============================================================================
+
+CREATE INDEX IF NOT EXISTS idx_dim_date_year
+ON warehouse.dim_date (year);
+
+CREATE INDEX IF NOT EXISTS idx_dim_date_month
+ON warehouse.dim_date (month);
+
+CREATE INDEX IF NOT EXISTS idx_dim_date_quarter
+ON warehouse.dim_date (quarter);
+
+CREATE INDEX IF NOT EXISTS idx_dim_date_week
+ON warehouse.dim_date (week_of_year);
