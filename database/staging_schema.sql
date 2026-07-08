@@ -33,9 +33,6 @@ CREATE TABLE IF NOT EXISTS projects
     CONSTRAINT chk_projects_id
         CHECK (project_id ~ '^P[0-9]+$'),
 
-    CONSTRAINT chk_projects_total_shots
-        CHECK (total_shots >= 0),
-
     CONSTRAINT chk_projects_dates
         CHECK (end_date >= start_date)
 );
@@ -45,10 +42,6 @@ COMMENT ON TABLE projects IS
 
 COMMENT ON COLUMN projects.project_id IS
 'Business identifier for the project.';
-
-COMMENT ON COLUMN projects.total_shots IS
-'Expected number of shots in the project.';
-
 
 -----------------------------------------------------------
 -- SEQUENCES
@@ -370,3 +363,18 @@ COMMENT ON COLUMN deliveries.version IS
 
 COMMENT ON COLUMN deliveries.final_delivery IS
 'Indicates whether this delivery is the final approved version.';
+
+
+-- =====================================================
+-- Invalid Row Log
+-- Stores rows rejected during Raw -> Staging ETL
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS invalid_log
+(
+    log_id              BIGSERIAL PRIMARY KEY,
+    source_table        VARCHAR(50) NOT NULL,
+    error_reason        TEXT NOT NULL,
+    row_data            JSONB NOT NULL,
+    logged_at           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
