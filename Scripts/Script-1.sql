@@ -1,1 +1,0 @@
-select * from staging.invalid_log il 
