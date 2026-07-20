@@ -42,7 +42,6 @@ shot_metrics AS (
     JOIN warehouse.dim_sequence ds
         ON sh.sequence_key = ds.sequence_key
     GROUP BY ds.project_key
-
 ),
 task_metrics AS (
     SELECT
