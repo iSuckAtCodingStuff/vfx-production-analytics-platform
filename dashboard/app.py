@@ -1,4 +1,4 @@
-from dash import Dash, html, page_container
+from dash import Dash, dcc, html, page_container
 
 from dashboard.callbacks import register_callbacks
 from dashboard.components.footer import create_footer
@@ -20,6 +20,7 @@ register_callbacks(app)
 #==========================================================================
 app.layout = html.Div(
     [
+        dcc.Location(id="url"),
         create_navbar(),
         page_container,
         create_footer()

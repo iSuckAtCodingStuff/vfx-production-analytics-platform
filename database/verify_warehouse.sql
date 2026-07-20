@@ -4,97 +4,60 @@
 
 SELECT 'staging.projects' AS table_name, COUNT(*) AS row_count
 FROM staging.projects
-
 UNION ALL
-
 SELECT 'warehouse.dim_project', COUNT(*)
 FROM warehouse.dim_project
-
 UNION ALL
-
 SELECT 'staging.sequences', COUNT(*)
 FROM staging.sequences
-
 UNION ALL
-
 SELECT 'warehouse.dim_sequence', COUNT(*)
 FROM warehouse.dim_sequence
-
 UNION ALL
-
 SELECT 'staging.shots', COUNT(*)
 FROM staging.shots
-
 UNION ALL
-
 SELECT 'warehouse.dim_shot', COUNT(*)
 FROM warehouse.dim_shot
-
 UNION ALL
-
 SELECT 'staging.tasks', COUNT(*)
 FROM staging.tasks
-
 UNION ALL
-
 SELECT 'warehouse.dim_task', COUNT(*)
 FROM warehouse.dim_task
-
 UNION ALL
-
 SELECT 'staging.artists', COUNT(*)
 FROM staging.artists
-
 UNION ALL
-
 SELECT 'warehouse.dim_artist', COUNT(*)
 FROM warehouse.dim_artist
-
 UNION ALL
-
 SELECT 'warehouse.dim_date', COUNT(*)
 FROM warehouse.dim_date
-
 UNION ALL
-
 SELECT 'staging.task_assignments', COUNT(*)
 FROM staging.task_assignments
-
 UNION ALL
-
 SELECT 'warehouse.fact_task_assignment', COUNT(*)
 FROM warehouse.fact_task_assignment
-
 UNION ALL
-
 SELECT 'staging.timesheets', COUNT(*)
 FROM staging.timesheets
-
 UNION ALL
-
 SELECT 'warehouse.fact_timesheet', COUNT(*)
 FROM warehouse.fact_timesheet
-
 UNION ALL
-
 SELECT 'staging.render_jobs', COUNT(*)
 FROM staging.render_jobs
-
 UNION ALL
-
 SELECT 'warehouse.fact_render', COUNT(*)
 FROM warehouse.fact_render
-
 UNION ALL
-
 SELECT 'staging.deliveries', COUNT(*)
 FROM staging.deliveries
-
 UNION ALL
-
 SELECT 'warehouse.fact_delivery', COUNT(*)
 FROM warehouse.fact_delivery
-
 ORDER BY table_name;
 
 -- ============================================================================

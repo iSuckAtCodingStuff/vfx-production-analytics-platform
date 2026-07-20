@@ -17,7 +17,11 @@ def load_sql(relative_path: str) -> str:
 
 
 def execute_sql(relative_path: str) -> pd.DataFrame:
-    """Execute a SQL file and return a Pandas DataFrame"""
+    """ Execute an analytical SQL report and return the result as a Pandas DataFrame.
+    Args:
+        relative_path: Relative path to the SQL file within the analytics directory.
+    Returns:
+        Query results as a Pandas DataFrame. """
 
     query = load_sql(relative_path)
 
@@ -27,17 +31,9 @@ def execute_sql(relative_path: str) -> pd.DataFrame:
         return pd.read_sql(text(query), connection)
     
 
-def execute_scalar(relative_path: str):
-    """Execute a SQL file that returns a single value."""
-
-    df = execute_sql(relative_path)
-
-    return df.iloc[0, 0]
 
 if __name__ == "__main__":
 
-    df = execute_sql(
-        "project_metrics/total_projects.sql"
-    )
+    df = execute_sql("executive_dashboard/40_studio_kpi_dashboard.sql")
 
     print(df)
