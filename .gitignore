@@ -17,6 +17,14 @@ __pycache__/
 *.pyd
 
 # =====================
+# Python Packaging
+# =====================
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+
+# =====================
 # Virtual environment
 # =====================
 venv/
@@ -39,11 +47,6 @@ venv/
 # =====================
 .DS_Store
 Thumbs.db
-
-# =====================
-# Logs
-# =====================
-*.log
 
 # =====================
 # Database / local state (if added later)
