@@ -102,6 +102,8 @@ body {
 
     font-weight: normal;
 
+    text-align: center;
+
 }
 
 
@@ -111,9 +113,13 @@ body {
 
     margin-bottom: 0;
 
-    font-size: 34px;
+    font-size: clamp(24px, 2vw, 34px);
 
     color: #2563eb;
+    
+    text-align: center;
+
+    overflow-wrap: anywhere;
 
 }
 
