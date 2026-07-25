@@ -1,209 +1,233 @@
+# Production-Grade Data Engineering Pipeline for Visual Effects Analytics
 
-# 🎬 VFX Production Analytics Platform
+![Python](https://img.shields.io/badge/Python-3.13+-3776AB?logo=python&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18+-336791?logo=postgresql&logoColor=white)
+![Dash](https://img.shields.io/badge/Dash-4.x-000000?logo=plotly)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.x-red)
+![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
 
-A production-inspired **Data Engineering** project that simulates the end-to-end data pipeline of a Visual Effects (VFX) studio. The platform ingests synthetic production data, validates and transforms it through multiple ETL layers, loads it into a dimensional Snowflake data warehouse, and prepares it for analytical reporting and visualization.
+> A production-style data engineering project that models the end-to-end
+> analytics lifecycle of a Visual Effects (VFX) studio using **Python**,
+> **PostgreSQL**, **SQLAlchemy**, **Dash**, and a **Snowflake
+> dimensional warehouse**.
 
-The project is designed to demonstrate industry-standard Data Engineering practices rather than serve as a tutorial or coding exercise.
+------------------------------------------------------------------------
 
----
+# Table of Contents
 
-# Project Objectives
+1.  Overview
+2.  Why This Project?
+3.  Features
+4.  Current Project Status
+5.  Technology Stack
+6.  Architecture
+7.  Dashboard
+8.  Project Structure
+9.  Installation
+10. Running the Project
+11. Design Principles
+12. Roadmap
+13. License
 
-- Build a production-quality ETL pipeline using Python and PostgreSQL.
-- Design a scalable multi-layer data architecture (Raw → Staging → Warehouse).
-- Implement reusable validation, logging, and error handling.
-- Model a Snowflake dimensional warehouse optimized for analytics.
-- Extend the platform into a modern cloud-based ELT architecture in future phases.
+------------------------------------------------------------------------
 
----
+# Overview
 
-# Tech Stack
+This project simulates a production-scale analytics platform for a VFX
+studio. Operational datasets are generated, validated, transformed
+through a layered ETL pipeline, loaded into a Snowflake warehouse,
+queried using analytical SQL, and visualized through a lightweight Dash
+dashboard.
 
-| Category | Technologies |
-|----------|--------------|
-| Language | Python 3 |
-| Database | PostgreSQL 18 |
-| ORM | SQLAlchemy |
-| SQL Client | DBeaver |
-| Data Processing | Pandas |
-| Data Generation | Faker |
-| Version Control | Git & GitHub |
-| Logging | Python Logging |
-| Future | Apache Spark, Google Cloud Platform (BigQuery, Cloud Storage), Plotly |
+The primary objective is to demonstrate production-oriented data
+engineering practices rather than building a visually complex dashboard.
 
----
+# Why This Project?
 
-# Project Architecture
+Modern VFX productions generate operational data across projects,
+artists, sequences, shots, tasks, render farms, and deliveries.
+Transactional systems are not optimized for business intelligence. This
+project demonstrates how those operational datasets can be transformed
+into analytics-ready data through clean architecture and engineering
+best practices.
 
-```text
-                CSV Files
-                    │
-                    ▼
-              Python ETL Pipeline
-                    │
-      ┌─────────────┴─────────────┐
-      ▼                           ▼
-     Raw                      Validation
-      │
-      ▼
-   Staging
-      │
-      ▼
- Warehouse (Snowflake Schema)
-      │
-      ▼
- Analytics SQL Layer
-      │
-      ▼
- Python Dashboard
-```
+# Features
 
----
-
-# ETL Architecture
-
-## Raw Layer
-
-- Mirror source data exactly.
-- Preserve original records.
-- Enable traceability and reprocessing.
-- Generic CSV loader
-- Config-driven ingestion
-- SQLAlchemy integration
-- Logging
-
-## Staging Layer
-
-- Clean and normalize incoming data.
-- Apply business validation.
-- Prepare data for dimensional modeling.
-- Centralized validation framework
-- Invalid row logging
-- Metadata-driven transformations
-- Reusable helper functions
-- Idempotent loading
-
-## Warehouse Layer
-
-Dimensions:
-- dim_project
-- dim_sequence
-- dim_shot
-- dim_task
-- dim_artist
-- dim_date
-
-Facts:
-- fact_task_assignment
-- fact_timesheet
-- fact_render
-- fact_delivery
-
-Features:
-- Surrogate keys
-- Natural business keys
-- Named constraints
-- Foreign key integrity
-- Index optimization
-- Audit columns
-
----
-
-# Project Structure
-
-```text
-VFX Production Analytics Platform/
-
-├── data/
-├── database/
-│   ├── raw_schema.sql
-│   ├── staging_schema.sql
-│   ├── warehouse_schema.sql
-│   ├── indexes.sql
-│   └── verify_warehouse.sql
-├── pipeline/
-│   ├── config.py
-│   ├── db.py
-│   ├── logger.py
-│   ├── load_raw.py
-│   ├── transform.py
-│   ├── warehouse_loader.py
-│   └── load_warehouse.py
-├── analytics/
-│   ├── project_metrics/
-│   ├── artist_metrics/
-│   ├── production_metrics/
-│   ├── render_metrics/
-│   └── delivery_metrics/
-└── README.md
-```
-
----
+-   Synthetic production dataset generation
+-   Raw → Staging → Warehouse ETL pipeline
+-   Centralized validation framework
+-   Snowflake dimensional warehouse
+-   40+ analytical SQL reports
+-   Interactive Dash dashboards
+-   Reusable dashboard components
+-   SQL-first analytics architecture
+-   Modular Python package structure
+-   Type hints and comprehensive docstrings
 
 # Current Project Status
 
 ## ✅ Completed
 
-- Synthetic VFX production dataset generation
-- Raw ETL pipeline
-- Staging ETL pipeline
-- Centralized validation framework
-- Invalid row logging
-- Snowflake dimensional warehouse
-- SQLAlchemy warehouse loader
-- Warehouse verification scripts
-- End-to-end dimensional validation
-- Production-inspired project architecture
+### Data Generation
 
-## 🚧 In Progress
+-   Synthetic VFX production dataset generation
 
-### Analytics SQL Layer
+### ETL Pipeline
 
-- Project KPIs
-- Production metrics
-- Artist utilization
-- Render performance
-- Delivery analytics
-- Executive dashboards
+-   Raw ETL
+-   Staging ETL
+-   Warehouse loader
+-   Validation framework
+-   Invalid row logging
+-   Warehouse verification
 
-Each report will be maintained as an independent SQL script.
+### Data Warehouse
 
-## 🔮 Planned Enhancements
+-   Snowflake dimensional model
+-   Fact and dimension tables
+-   Optimized indexes
 
-- Interactive Python dashboards
-- Data dictionary
-- Architecture diagrams
-- ETL documentation
-- Apache Spark integration
-- Google Cloud Platform (GCS & BigQuery)
-- Modern cloud-native ELT architecture
+### Analytics
 
----
+-   40+ analytical SQL reports
+-   Executive KPIs
+-   Project analytics
+-   Artist utilization
+-   Production metrics
+-   Render analytics
+-   Delivery analytics
+
+### Dashboard
+
+-   Executive Dashboard
+-   Projects Dashboard
+-   Artists Dashboard
+-   Renders Dashboard
+-   Deliveries Dashboard
+-   Reusable UI components
+-   SQL-driven presentation layer
+
+### Engineering
+
+-   Modular package architecture
+-   Absolute imports
+-   Type hints
+-   Docstrings
+-   Clean separation of concerns
+
+## 🚀 Next Phase
+
+-   Apache Airflow
+-   Docker
+-   Apache Spark
+-   Google Cloud Platform
+-   dbt
+-   CI/CD
+-   Automated testing
+
+# Technology Stack
+
+  Layer             Technology
+  ----------------- --------------------
+  Language          Python 3.13+
+  Database          PostgreSQL 18+
+  ETL               Pandas, SQLAlchemy
+  Dashboard         Dash, Plotly
+  Data Generation   Faker
+  Warehouse         Snowflake Schema
+
+# Project Architecture
+
+``` mermaid
+flowchart LR
+A[Synthetic CSV Data] --> B[Raw Schema]
+B --> C[Staging Schema]
+C --> D[Warehouse Schema]
+D --> E[Analytical SQL]
+E --> F[Dash Dashboard]
+```
+
+## Data Warehouse ERD
+
+![Warehouse ERD](images/warehouse_erd.png)
+
+# Dashboard
+
+### Executive Dashboard
+
+![Executive Dashboard](images/Executive_dashboard.png)
+
+### Projects Dashboard
+
+![Projects Dashboard](images/Projects_dashboard.png)
+
+### Artists Dashboard
+
+![Artists Dashboard](images/Artists_dashboard.png)
+
+### Renders Dashboard
+
+![Renders Dashboard](images/renders_dashboard.png)
+
+### Deliveries Dashboard
+
+![Deliveries Dashboard](images/deliveries_dashboard.png)
+
+# Project Structure
+
+``` text
+analytics/
+dashboard/
+data/
+images/
+pipeline/
+README.md
+requirements.txt
+LICENSE
+```
+
+# Installation
+
+``` bash
+git clone https://github.com/iSuckAtCodingStuff/vfx-production-analytics-platform.git
+cd vfx-production-analytics-platform
+
+python -m venv venv
+
+# Windows
+venv\Scripts\activate
+
+pip install -r requirements.txt
+```
+
+# Running the Dashboard
+
+``` bash
+python -m dashboard.app
+```
 
 # Design Principles
 
-- Production-quality code
-- Readability over clever abstractions
-- Modular architecture
-- Separation of concerns
-- Reusable components
-- Idempotent ETL
-- Centralized configuration
-- Analytics-ready data modeling
-- Scalable and maintainable design
+-   Business logic belongs in SQL.
+-   Python orchestrates ETL and presentation.
+-   Dashboard performs no business calculations.
+-   One callback per page.
+-   Reusable components over duplication.
+-   Clear separation of data, business, and presentation layers.
 
----
+# Roadmap
 
-# Future Roadmap
+**Phase 2** - Airflow orchestration - Docker
 
-- Complete Analytics SQL library
-- Build interactive Python dashboards
-- Expand technical documentation
-- Integrate Apache Spark
-- Migrate analytics workflow to Google Cloud
-- Implement a modern ELT architecture
+**Phase 3** - Spark - GCP - dbt - CI/CD
 
----
+# License
+
+Licensed under the **GNU General Public License v3.0**.
+
+See the `LICENSE` file for details.
+
+------------------------------------------------------------------------
 
 # Author
 
@@ -211,6 +235,8 @@ Each report will be maintained as an independent SQL script.
 
 **Data Engineer | Python Developer | Former CreatureFX Technical Director**
 
-Experienced in Python automation, ETL pipelines, workflow optimization, backend tooling, and large-scale VFX production data processing.
+Experienced in designing Python automation, ETL pipelines, backend tooling, workflow optimization, and large-scale data processing within production Visual Effects pipelines.
 
-This repository demonstrates the design and implementation of a production-inspired analytics platform using modern data engineering practices.
+This repository showcases the design and implementation of a production-inspired analytics platform built using modern data engineering principles, including data modeling, ETL, analytical SQL, and interactive reporting.
+
+GitHub: https://github.com/iSuckAtCodingStuff
