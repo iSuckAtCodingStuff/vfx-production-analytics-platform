@@ -18,6 +18,10 @@
 > - 📈 40+ analytical SQL reports
 > - 📉 5 interactive Dash dashboards
 > - 🐍 Built with Python, PostgreSQL, SQLAlchemy, Pandas, and Plotly
+>
+> **Status:** ✅ Phase 1 Complete
+>
+> Current focus: Apache Airflow orchestration, cloud architecture, and distributed data processing.
 
 ---
 
@@ -171,7 +175,7 @@ A Star Schema would still be a perfectly valid choice for many analytical worklo
 
 The platform follows a layered Extract–Transform–Load (ETL) architecture inspired by modern data engineering practices.
 
-Each stage has a clearly defined responsibility.
+Each stage has a **clearly defined responsibility.**
 
 ```text
 Synthetic CSV Data
@@ -400,7 +404,7 @@ A key architectural decision throughout the project was to keep the dashboard fr
 
 The Executive Dashboard provides a high-level overview of studio-wide production metrics.
 
-It includes:
+Key features include:
 
 - Studio KPIs
 - Project status distribution
@@ -416,7 +420,7 @@ It includes:
 
 The Projects Dashboard focuses on project-level resource utilization and production workload.
 
-It includes:
+Key features include:
 
 - Total projects
 - Total tasks
@@ -433,7 +437,7 @@ It includes:
 
 The Artists Dashboard provides insight into workforce utilization across departments.
 
-It includes:
+Key features include:
 
 - Department utilization
 - Total artists
@@ -449,7 +453,7 @@ It includes:
 
 The Renders Dashboard monitors render farm performance and rendering workload.
 
-It includes:
+Key features include:
 
 - Successful renders
 - Failed renders
@@ -466,7 +470,7 @@ It includes:
 
 The Deliveries Dashboard focuses on client delivery performance.
 
-It includes:
+Key features include:
 
 - Delivery approval rate
 - Approved deliveries
@@ -490,9 +494,9 @@ vfx-production-analytics-platform/
 │   ├── delivery_metrics/
 │   ├── executive_dashboard/
 │   ├── project_metrics/
-│   └── render_metrics/
-│   └── sequence_metrics/
-│   └── task_metrics/
+│   ├── render_metrics/
+│   ├── sequence_metrics/
+│   ├── task_metrics/
 │   └── timesheet_metrics/
 │
 ├── dashboard/
@@ -645,9 +649,9 @@ These principles were intentionally adopted to improve maintainability, scalabil
 
 # Future Roadmap
 
-Although the current implementation provides a complete end-to-end analytical data engineering pipeline, there are several enhancements I've planned to further evolve the platform toward a production-grade cloud architecture.
+Although the current implementation provides a complete end-to-end analytical data engineering pipeline, there are several enhancements I have several enhancements to further evolve the platform toward a production-grade cloud architecture.
 
-## Phase 3 — Workflow Orchestration
+## Phase 2 — Workflow Orchestration
 
 The current ETL pipeline is executed manually. The next step is to orchestrate the pipeline using **Apache Airflow**, allowing individual stages to be scheduled, monitored, and retried independently.
 
@@ -661,7 +665,7 @@ Planned enhancements include:
 
 ---
 
-## Phase 4 — Big Data Processing
+## Phase 3 — Big Data Processing
 
 The analytical SQL layer currently runs on PostgreSQL.
 
@@ -676,7 +680,7 @@ Planned improvements include:
 
 ---
 
-## Phase 5 — Cloud Deployment
+## Phase 4 — Cloud Deployment
 
 The long-term objective is to deploy the platform using managed cloud services while preserving the existing architecture.
 
@@ -724,7 +728,7 @@ Some of the most valuable lessons included:
 - Refactoring the dashboard into a proper Python package using reusable components and absolute imports.
 - Designing reusable callbacks that minimize redundant SQL execution and improve maintainability.
 
-These decisions significantly improved the overall architecture and reinforced the importance of designing systems that are easy to extend rather than simply making them work.
+Looking back, these decisions significantly improved the overall architecture and reinforced the importance of designing systems that are easy to extend rather than simply making them work.
 
 ---
 
