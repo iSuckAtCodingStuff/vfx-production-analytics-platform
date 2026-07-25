@@ -127,14 +127,16 @@ best practices.
 
 # Technology Stack
 
-  Layer             Technology
-  ----------------- --------------------
-  Language          Python 3.13+
-  Database          PostgreSQL 18+
-  ETL               Pandas, SQLAlchemy
-  Dashboard         Dash, Plotly
-  Data Generation   Faker
-  Warehouse         Snowflake Schema
+| Category | Technology |
+|:---------|:-----------|
+| Programming Language | Python 3.13+ |
+| Database | PostgreSQL 18+ |
+| Data Processing | Pandas |
+| ORM | SQLAlchemy |
+| Dashboard | Dash |
+| Visualization | Plotly |
+| Synthetic Data Generation | Faker |
+| Warehouse Modeling | Snowflake Schema |
 
 # Project Architecture
 
@@ -167,7 +169,7 @@ E --> F[Dash Dashboard]
 
 ### Renders Dashboard
 
-![Renders Dashboard](images/Renders_Dashboard.png)
+![Renders Dashboard](images/Render_Dashboard.png)
 
 ### Deliveries Dashboard
 
