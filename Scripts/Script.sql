@@ -1,1 +1,0 @@
-SELECT * FROM staging.invalid_log LIMIT 1;
