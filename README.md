@@ -155,23 +155,23 @@ E --> F[Dash Dashboard]
 
 ### Executive Dashboard
 
-![Executive Dashboard](images/Executive_dashboard.png)
+![Executive Dashboard](images/Executive_Dashboard.png)
 
 ### Projects Dashboard
 
-![Projects Dashboard](images/Projects_dashboard.png)
+![Projects Dashboard](images/Projects_Dashboard.png)
 
 ### Artists Dashboard
 
-![Artists Dashboard](images/Artists_dashboard.png)
+![Artists Dashboard](images/Artists_Dashboard.png)
 
 ### Renders Dashboard
 
-![Renders Dashboard](images/renders_dashboard.png)
+![Renders Dashboard](images/Renders_Dashboard.png)
 
 ### Deliveries Dashboard
 
-![Deliveries Dashboard](images/deliveries_dashboard.png)
+![Deliveries Dashboard](images/Deliveries_Dashboard.png)
 
 # Project Structure
 
