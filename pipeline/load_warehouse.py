@@ -14,7 +14,7 @@ Warehouse Facts """
 # Imports
 # ---------------------------------------------------------------------
 
-from pipeline.db import get_engine
+from pipeline.db import get_engine, dispose_engine
 from pipeline.logger import get_logger
 
 from pipeline.warehouse_loader import (
@@ -84,11 +84,12 @@ def main() -> None:
             logger.info("Warehouse ETL completed successfully.")
             logger.info("=" * 80)
 
-    except Exception as error:
-
-        logger.exception(f"Warehouse ETL failed: {error}")
-
+    except Exception:
+        logger.exception(f"Warehouse ETL failed.")
         raise
+
+    finally:
+        dispose_engine()
 
 if __name__ == "__main__":
     main()

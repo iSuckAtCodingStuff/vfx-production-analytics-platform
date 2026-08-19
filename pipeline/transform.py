@@ -17,8 +17,6 @@ from pipeline.db import get_engine, dispose_engine
 
 logger = get_logger(__name__)
 
-engine = get_engine()
-
 INVALID_ROW_COUNT = 0
 
 # ==========================================================
@@ -141,7 +139,7 @@ ID_PATTERNS = {
 # Logging Helper
 # ==========================================================
 
-def log_invalid_rows(table_name: str, invalid_df: pd.DataFrame, reason: str,) -> None:
+def log_invalid_rows(table_name: str, invalid_df: pd.DataFrame, reason: str, engine) -> None:
     """ Log invalid rows removed during transformation """
 
     global INVALID_ROW_COUNT
@@ -184,12 +182,12 @@ def log_invalid_rows(table_name: str, invalid_df: pd.DataFrame, reason: str,) ->
 # Generic Validation Helper
 # ==========================================================
 
-def _apply_validation(df: pd.DataFrame, mask: pd.Series, table_name: str, reason: str,) -> pd.DataFrame:
+def _apply_validation(df: pd.DataFrame, mask: pd.Series, table_name: str, reason: str, engine) -> pd.DataFrame:
     """ Apply a validation mask, log rejected rows, and return only valid rows """
 
     invalid_rows = df.loc[~mask]
     if not invalid_rows.empty:
-        log_invalid_rows(table_name, invalid_rows, reason,)
+        log_invalid_rows(table_name, invalid_rows, reason, engine)
     
     return df.loc[mask].copy()
 
@@ -245,7 +243,7 @@ def select_staging_columns(df: pd.DataFrame, table_name: str,) -> pd.DataFrame:
 # Database Helper
 # ==========================================================
 
-def truncate_staging_table(table_name: str,) -> None:
+def truncate_staging_table(table_name: str, engine) -> None:
     """ Truncate a staging table before loading """
 
     with engine.begin() as connection:
@@ -256,62 +254,62 @@ def truncate_staging_table(table_name: str,) -> None:
 # Validation Helpers
 # ==========================================================
 
-def validate_required_columns(df: pd.DataFrame, columns: list[str], table_name: str,) -> pd.DataFrame:
+def validate_required_columns(df: pd.DataFrame, columns: list[str], table_name: str, engine) -> pd.DataFrame:
     """ Remove rows containing NULL values in required columns """
 
     for column in columns:
         mask = df[column].notna()
 
-        df = _apply_validation(df, mask, table_name, f"{column} cannot be NULL",)
+        df = _apply_validation(df, mask, table_name, f"{column} cannot be NULL", engine)
 
     return df
 
 
-def validate_numeric(df: pd.DataFrame, column: str, table_name: str,) -> pd.DataFrame:
+def validate_numeric(df: pd.DataFrame, column: str, table_name: str,engine) -> pd.DataFrame:
     """ Remove rows where numeric conversion failed """
 
     mask = df[column].notna()
 
-    return _apply_validation(df, mask, table_name, f"{column} contains non-numeric value",)
+    return _apply_validation(df, mask, table_name, f"{column} contains non-numeric value", engine)
 
 
-def validate_non_negative(df: pd.DataFrame, column: str, table_name: str,) -> pd.DataFrame:
+def validate_non_negative(df: pd.DataFrame, column: str, table_name: str, engine) -> pd.DataFrame:
     """ Remove rows containing negative values """
 
     mask = df[column] >= 0
 
-    return _apply_validation(df, mask, table_name, f"{column} cannot be negative",)
+    return _apply_validation(df, mask, table_name, f"{column} cannot be negative", engine)
 
 
-def validate_positive( df: pd.DataFrame, column: str, table_name: str,) -> pd.DataFrame:
+def validate_positive( df: pd.DataFrame, column: str, table_name: str, engine) -> pd.DataFrame:
     """ Remove rows containing values less than or equal to zero """
 
     mask = df[column] > 0
 
-    return _apply_validation(df, mask,table_name, f"{column} must be greater than zero",)
+    return _apply_validation(df, mask,table_name, f"{column} must be greater than zero", engine)
 
 
-def validate_date_order(df: pd.DataFrame,start_column: str, end_column: str,table_name: str,) -> pd.DataFrame:
+def validate_date_order(df: pd.DataFrame,start_column: str, end_column: str,table_name: str, engine) -> pd.DataFrame:
     """ Validate chronological order between two dates """
 
     mask = df[end_column] >= df[start_column]
 
-    return _apply_validation(df, mask, table_name, f"{end_column} cannot be earlier than {start_column}",)
+    return _apply_validation(df, mask, table_name, f"{end_column} cannot be earlier than {start_column}", engine)
 
 
-def validate_regex(df: pd.DataFrame, column: str, pattern: str, table_name: str,) -> pd.DataFrame:
+def validate_regex(df: pd.DataFrame, column: str, pattern: str, table_name: str, engine) -> pd.DataFrame:
     """ Validate values using a regular expression """
 
     mask = df[column].str.match(pattern, na=False)
 
-    return _apply_validation(df, mask, table_name, f"{column} has an invalid format",)
+    return _apply_validation(df, mask, table_name, f"{column} has an invalid format", engine)
 
 
 # ==========================================================
 # Transformation Functions
 # ==========================================================
 
-def transform_projects(df: pd.DataFrame) -> pd.DataFrame:
+def transform_projects(df: pd.DataFrame, engine) -> pd.DataFrame:
     """ Transform the projects table """
 
     table_name = "projects"
@@ -331,20 +329,20 @@ def transform_projects(df: pd.DataFrame) -> pd.DataFrame:
 
     df = convert_date_columns(df, ["start_date", "end_date"],)
 
-    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name,)
+    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name, engine)
 
-    df = validate_regex(df, "project_id", ID_PATTERNS["project_id"], table_name,)
+    df = validate_regex(df, "project_id", ID_PATTERNS["project_id"], table_name, engine)
 
-    df = validate_numeric(df, "budget_million_usd", table_name,)
+    df = validate_numeric(df, "budget_million_usd", table_name, engine)
 
-    df = validate_non_negative(df, "budget_million_usd", table_name,)
+    df = validate_non_negative(df, "budget_million_usd", table_name, engine)
 
-    df = validate_date_order(df, "start_date", "end_date", table_name,)
+    df = validate_date_order(df, "start_date", "end_date", table_name, engine)
 
     return select_staging_columns(df, table_name,)
 
 
-def transform_sequences(df: pd.DataFrame) -> pd.DataFrame:
+def transform_sequences(df: pd.DataFrame, engine) -> pd.DataFrame:
     """ Transform the sequences table     """
 
     table_name = "sequences"
@@ -353,16 +351,16 @@ def transform_sequences(df: pd.DataFrame) -> pd.DataFrame:
 
     df = convert_date_columns(df, ["start_date", "end_date"])
 
-    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name,)
+    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name, engine)
 
-    df = validate_regex(df, "sequence_id", ID_PATTERNS["sequence_id"], table_name,)
+    df = validate_regex(df, "sequence_id", ID_PATTERNS["sequence_id"], table_name, engine)
 
-    df = validate_date_order(df, "start_date", "end_date", table_name,)
+    df = validate_date_order(df, "start_date", "end_date", table_name, engine)
 
     return select_staging_columns(df, table_name)
 
 
-def transform_shots(df: pd.DataFrame) -> pd.DataFrame:
+def transform_shots(df: pd.DataFrame, engine) -> pd.DataFrame:
     """ Transform the shots table """
 
     table_name = "shots"
@@ -372,19 +370,19 @@ def transform_shots(df: pd.DataFrame) -> pd.DataFrame:
     df = convert_numeric_columns(df, ["frame_count"])
     df = convert_date_columns(df, ["start_date", "end_date"])
 
-    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name,)
+    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name, engine)
 
-    df = validate_regex(df, "shot_id", ID_PATTERNS["shot_id"], table_name,)
+    df = validate_regex(df, "shot_id", ID_PATTERNS["shot_id"], table_name, engine)
 
-    df = validate_numeric(df, "frame_count", table_name)
-    df = validate_positive(df, "frame_count", table_name)
+    df = validate_numeric(df, "frame_count", table_name, engine)
+    df = validate_positive(df, "frame_count", table_name, engine)
 
-    df = validate_date_order(df, "start_date", "end_date", table_name,)
+    df = validate_date_order(df, "start_date", "end_date", table_name, engine)
 
     return select_staging_columns(df, table_name)
 
 
-def transform_tasks(df: pd.DataFrame) -> pd.DataFrame:
+def transform_tasks(df: pd.DataFrame, engine) -> pd.DataFrame:
     """ Transform the tasks table """
 
     table_name = "tasks"
@@ -394,20 +392,20 @@ def transform_tasks(df: pd.DataFrame) -> pd.DataFrame:
     df = convert_numeric_columns(df, ["estimated_hours"])
     df = convert_date_columns(df, ["start_date", "end_date"])
 
-    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name,)
+    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name, engine)
 
-    df = validate_regex(df, "task_id", ID_PATTERNS["task_id"], table_name,)
+    df = validate_regex(df, "task_id", ID_PATTERNS["task_id"], table_name, engine)
 
-    df = validate_numeric(df, "estimated_hours", table_name,)
+    df = validate_numeric(df, "estimated_hours", table_name, engine)
 
-    df = validate_non_negative(df, "estimated_hours", table_name,)
+    df = validate_non_negative(df, "estimated_hours", table_name, engine)
 
-    df = validate_date_order(df, "start_date", "end_date", table_name,)
+    df = validate_date_order(df, "start_date", "end_date", table_name, engine)
 
     return select_staging_columns(df, table_name)
 
 
-def transform_artists(df: pd.DataFrame) -> pd.DataFrame:
+def transform_artists(df: pd.DataFrame, engine) -> pd.DataFrame:
     """ Transform the artists table """
 
     table_name = "artists"
@@ -422,18 +420,18 @@ def transform_artists(df: pd.DataFrame) -> pd.DataFrame:
 
     df = convert_numeric_columns(df, ["experience_years"],)
 
-    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name,)
+    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name, engine)
 
-    df = validate_regex(df, "artist_id", ID_PATTERNS["artist_id"], table_name,)
+    df = validate_regex(df, "artist_id", ID_PATTERNS["artist_id"], table_name, engine)
 
-    df = validate_numeric(df, "experience_years", table_name,)
+    df = validate_numeric(df, "experience_years", table_name, engine)
 
-    df = validate_non_negative(df, "experience_years", table_name,)
+    df = validate_non_negative(df, "experience_years", table_name, engine)
 
     return select_staging_columns(df, table_name,)
 
 
-def transform_task_assignments(df: pd.DataFrame) -> pd.DataFrame:
+def transform_task_assignments(df: pd.DataFrame, engine) -> pd.DataFrame:
     """ Transform the task_assignments table """
 
     table_name = "task_assignments"
@@ -450,22 +448,22 @@ def transform_task_assignments(df: pd.DataFrame) -> pd.DataFrame:
 
     df = convert_date_columns(df, ["assignment_date"],)
 
-    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name,)
+    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name, engine)
 
-    df = validate_regex(df, "assignment_id", ID_PATTERNS["assignment_id"], table_name,)
+    df = validate_regex(df, "assignment_id", ID_PATTERNS["assignment_id"], table_name, engine)
 
-    df = validate_regex(df, "task_id", ID_PATTERNS["task_id"], table_name,)
+    df = validate_regex(df, "task_id", ID_PATTERNS["task_id"], table_name, engine)
 
-    df = validate_regex(df, "artist_id", ID_PATTERNS["artist_id"], table_name,)
+    df = validate_regex(df, "artist_id", ID_PATTERNS["artist_id"], table_name, engine)
 
-    df = validate_numeric(df, "assigned_hours", table_name,)
+    df = validate_numeric(df, "assigned_hours", table_name, engine)
 
-    df = validate_non_negative(df, "assigned_hours", table_name,)
+    df = validate_non_negative(df, "assigned_hours", table_name, engine)
 
     return select_staging_columns(df, table_name,)
 
 
-def transform_timesheets(df: pd.DataFrame) -> pd.DataFrame:
+def transform_timesheets(df: pd.DataFrame, engine) -> pd.DataFrame:
     """ Transform the timesheets table """
 
     table_name = "timesheets"
@@ -481,20 +479,20 @@ def transform_timesheets(df: pd.DataFrame) -> pd.DataFrame:
 
     df = convert_date_columns(df, ["work_date"],)
 
-    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name,)
+    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name, engine)
 
-    df = validate_regex(df, "timesheet_id", ID_PATTERNS["timesheet_id"], table_name,)
+    df = validate_regex(df, "timesheet_id", ID_PATTERNS["timesheet_id"], table_name, engine)
 
-    df = validate_regex(df, "assignment_id", ID_PATTERNS["assignment_id"], table_name,)
+    df = validate_regex(df, "assignment_id", ID_PATTERNS["assignment_id"], table_name, engine)
 
-    df = validate_numeric(df, "hours_logged", table_name,)
+    df = validate_numeric(df, "hours_logged", table_name, engine)
 
-    df = validate_non_negative(df, "hours_logged", table_name,)
+    df = validate_non_negative(df, "hours_logged", table_name, engine)
 
     return select_staging_columns(df, table_name,)
 
 
-def transform_render_jobs(df: pd.DataFrame) -> pd.DataFrame:
+def transform_render_jobs(df: pd.DataFrame, engine) -> pd.DataFrame:
     """ Transform the render_jobs table """
 
     table_name = "render_jobs"
@@ -522,26 +520,26 @@ def transform_render_jobs(df: pd.DataFrame) -> pd.DataFrame:
         ],
     )
 
-    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name,)
+    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name, engine)
 
-    df = validate_regex(df, "render_id", ID_PATTERNS["render_id"], table_name,)
+    df = validate_regex(df, "render_id", ID_PATTERNS["render_id"], table_name, engine)
 
-    df = validate_regex(df, "shot_id", ID_PATTERNS["shot_id"], table_name,)
+    df = validate_regex(df, "shot_id", ID_PATTERNS["shot_id"], table_name, engine)
 
-    df = validate_numeric(df, "frame_count", table_name, )
+    df = validate_numeric(df, "frame_count", table_name, engine)
 
-    df = validate_positive(df, "frame_count", table_name,)
+    df = validate_positive(df, "frame_count", table_name, engine)
 
-    df = validate_numeric(df, "render_hours", table_name, )
+    df = validate_numeric(df, "render_hours", table_name, engine)
 
-    df = validate_non_negative(df, "render_hours", table_name, )
+    df = validate_non_negative(df, "render_hours", table_name, engine)
 
-    df = validate_date_order(df, "submission_date", "completion_date", table_name,)
+    df = validate_date_order(df, "submission_date", "completion_date", table_name, engine)
 
     return select_staging_columns(df, table_name, )
 
 
-def transform_deliveries(df: pd.DataFrame) -> pd.DataFrame:
+def transform_deliveries(df: pd.DataFrame, engine) -> pd.DataFrame:
     """ Transform the deliveries table """
 
     table_name = "deliveries"
@@ -559,17 +557,17 @@ def transform_deliveries(df: pd.DataFrame) -> pd.DataFrame:
 
     df = convert_date_columns(df, ["delivery_date"],) 
 
-    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name,)
+    df = validate_required_columns(df, STAGING_COLUMNS[table_name], table_name, engine)
 
-    df = validate_regex(df, "delivery_id", ID_PATTERNS["delivery_id"], table_name,)
+    df = validate_regex(df, "delivery_id", ID_PATTERNS["delivery_id"], table_name, engine)
 
-    df = validate_regex(df, "shot_id",ID_PATTERNS["shot_id"], table_name,)
+    df = validate_regex(df, "shot_id",ID_PATTERNS["shot_id"], table_name, engine)
 
-    df = validate_regex(df, "version", ID_PATTERNS["version"], table_name,)
+    df = validate_regex(df, "version", ID_PATTERNS["version"], table_name, engine)
 
-    df = validate_numeric(df, "review_days", table_name,)
+    df = validate_numeric(df, "review_days", table_name, engine)
 
-    df = validate_non_negative(df, "review_days", table_name,)
+    df = validate_non_negative(df, "review_days", table_name, engine)
 
     return select_staging_columns(df, table_name,)
 
@@ -596,10 +594,10 @@ TRANSFORMATIONS = {
 # Database Load Helper
 # ==========================================================
 
-def load_to_staging(df: pd.DataFrame, table_name: str,) -> None:
+def load_to_staging(df: pd.DataFrame, table_name: str, engine) -> None:
     """ Load transformed data into the staging schema """
 
-    truncate_staging_table(table_name)
+    truncate_staging_table(table_name, engine)
 
     df.to_sql(name=table_name, con=engine,schema="staging", if_exists="append", index=False, method="multi")
 
@@ -610,7 +608,7 @@ def load_to_staging(df: pd.DataFrame, table_name: str,) -> None:
 # Table Processing
 # ==========================================================
 
-def process_table(table_name: str,) -> None:
+def process_table(table_name: str, engine) -> None:
     """ Execute the complete ETL process for one table """
 
     logger.info("Processing table: %s", table_name)
@@ -618,11 +616,11 @@ def process_table(table_name: str,) -> None:
     with engine.connect() as conn:
         df = pd.read_sql(text(f"SELECT * FROM raw.{table_name}"),conn,)
 
-    df = TRANSFORMATIONS[table_name](df)
+    df = TRANSFORMATIONS[table_name](df, engine)
 
     df = select_staging_columns(df, table_name,)
     
-    load_to_staging(df, table_name,)
+    load_to_staging(df, table_name, engine)
 
 
 # ==========================================================
@@ -636,6 +634,8 @@ def main() -> None:
     logger.info("Starting Raw -> Staging ETL")
     logger.info("=" * 60)
 
+    engine = get_engine()
+
     successful = 0
     failed = 0
 
@@ -643,10 +643,10 @@ def main() -> None:
         
         for table_name in TRANSFORMATIONS:
             try:
-                process_table(table_name)
+                process_table(table_name, engine)
                 successful += 1
 
-            except Exception as e:
+            except Exception:
                 failed += 1
                 logger.exception("%s: ETL failed.", table_name,)
         
@@ -660,6 +660,8 @@ def main() -> None:
     logger.info("Invalid row(s)    : %d", INVALID_ROW_COUNT,)
     logger.info("=" * 60)
 
+    if failed > 0:
+        raise RuntimeError()
 
 if __name__ == "__main__":
     main()
