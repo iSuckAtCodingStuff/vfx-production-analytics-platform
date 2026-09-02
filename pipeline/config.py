@@ -21,15 +21,9 @@ RAW_SCHEMA = "raw"
 STAGING_SCHEMA = "staging"
 WAREHOUSE_SCHEMA = "warehouse"
 
-GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID")
-GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME")
-GCS_RAW_PREFIX = os.getenv("GCS_RAW_PREFIX", "raw")
-
 LOG_DIR = BASE_DIR / "logs"
 DATA_DIR = BASE_DIR / "data"
 
 INVALID_LOG_DIR = LOG_DIR / "invalid_rows"
 
 INVALID_LOG_DIR.mkdir(parents=True, exist_ok=True, )
-
-
